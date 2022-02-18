@@ -5,3 +5,4 @@ yarn-error.log
 /__sapper__/
 package-lock.json
 public/build/
+__sapper__/
