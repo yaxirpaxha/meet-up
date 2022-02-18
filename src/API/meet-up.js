@@ -25,8 +25,17 @@ export const meetupServer = {
             }
         });
     },
-    getMeetups: () => {
-        return fetch('https://meet-up-4ebeb-default-rtdb.firebaseio.com/meetups.json').then(response => {
+    getMeetups: (ref) => {
+        return ref.fetch('https://meet-up-4ebeb-default-rtdb.firebaseio.com/meetups.json').then(response => {
+            if(!response.ok) {
+                throw new Error('Something went wrog, metups could not be fetched');
+            } else {
+                return response.json();
+            }
+        });
+    },
+    getMeetupDetail: (id, ref) => {
+        return ref.fetch(`https://meet-up-4ebeb-default-rtdb.firebaseio.com/meetups/${id}.json`).then(response => {
             if(!response.ok) {
                 throw new Error('Something went wrog, metups could not be fetched');
             } else {
