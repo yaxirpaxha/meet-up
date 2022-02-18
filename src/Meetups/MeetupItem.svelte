@@ -1,8 +1,10 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { meetupServer } from "../API/meet-up";
   import meetups from '../Stores/meetup-store.js'
   import Button from "../UI/Button.svelte";
   import Badge from "../UI/Badge.svelte";
+  import LoadingSpinner from '../UI/LoadingSpinner.svelte'
 
 
   const dispatch = createEventDispatcher();
@@ -15,13 +17,26 @@
   export let address;
   export let email;
   export let isFav;
+  let isLoading = false;
 
   function togglefavorite() {
-    meetups.toggleFavorite(id);
+    isLoading = true;
+    meetupServer.updateMeetup(id, {isFavorite: !isFav}).then(() => {
+      meetups.toggleFavorite(id);
+      isLoading = false;
+    }).catch(ex => {
+      isLoading = false;
+      dispatch('error', ex);
+    });
   }
 
   function deleteMeetup() {
-    meetups.deleteMeetup(id);
+    meetupServer.rmeoveMeetup(id).then(response => {
+      meetups.deleteMeetup(id);
+    }).catch(ex => {
+      dispatch('error', ex);
+    });
+    
   }
 </script>
 
@@ -90,6 +105,9 @@
 </style>
 
 <article>
+  {#if isLoading}
+     <LoadingSpinner />
+  {/if}
   <header>
     <h1>
       {title}
