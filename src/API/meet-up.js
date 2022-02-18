@@ -1,7 +1,7 @@
-
+const BASE_URL = `<INSERT_BASE_URL_HERE>`;
 export const meetupServer = {
     addMeetup: (meetupdata) => {
-        return fetch('https://meet-up-4ebeb-default-rtdb.firebaseio.com/meetups.json', {
+        return fetch(`${BASE_URL}/meetups.json`, {
             method: 'POST',
             body: JSON.stringify(meetupdata),
             headers: {'Content-Type': 'application/json'}
@@ -15,7 +15,7 @@ export const meetupServer = {
         });
     },
     updateMeetup: (id, meetupdata) => {
-        return fetch(`https://meet-up-4ebeb-default-rtdb.firebaseio.com/meetups/${id}.json`, {
+        return fetch(`${BASE_URL}/meetups/${id}.json`, {
             method: 'PATCH',
             body: JSON.stringify(meetupdata),
             headers: {'Content-Type': 'application/json'}
@@ -26,7 +26,7 @@ export const meetupServer = {
         });
     },
     getMeetups: (ref) => {
-        return ref.fetch('https://meet-up-4ebeb-default-rtdb.firebaseio.com/meetups.json').then(response => {
+        return ref.fetch(`${BASE_URL}/meetups.json`).then(response => {
             if(!response.ok) {
                 throw new Error('Something went wrog, metups could not be fetched');
             } else {
@@ -35,7 +35,7 @@ export const meetupServer = {
         });
     },
     getMeetupDetail: (id, ref) => {
-        return ref.fetch(`https://meet-up-4ebeb-default-rtdb.firebaseio.com/meetups/${id}.json`).then(response => {
+        return ref.fetch(`${BASE_URL}/meetups/${id}.json`).then(response => {
             if(!response.ok) {
                 throw new Error('Something went wrog, metups could not be fetched');
             } else {
@@ -44,7 +44,7 @@ export const meetupServer = {
         });
     },
     rmeoveMeetup: (id) => {
-        return fetch(`https://meet-up-4ebeb-default-rtdb.firebaseio.com/meetups/${id}.json`, {
+        return fetch(`${BASE_URL}/meetups/${id}.json`, {
             method: 'DELETE'
         });
     }
