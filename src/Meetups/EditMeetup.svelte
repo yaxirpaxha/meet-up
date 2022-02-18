@@ -1,5 +1,6 @@
 <script>
   import meetups from '../Stores/meetup-store.js'
+  import { meetupServer } from "../API/meet-up";
   import { createEventDispatcher, tick } from "svelte";
   import TextInput from "../UI/TextInput.svelte";
   import Button from "../UI/Button.svelte";
@@ -22,8 +23,6 @@
   $: emailValid = isValidEmail(email);
   $: formValid = titleValid && addressValid && emailValid;
   
-  
-
   function fetchDetails(id) {
     if(id) {
         const unsubscribe = meetups.subscribe(items => {
@@ -47,9 +46,25 @@
       address: address
     };
     if(id) {
-      meetups.updateMeetup(id ,meetupData);
+      meetupServer.updateMeetup(id, meetupData).then(() => {
+        meetups.updateMeetup(id ,meetupData);
+      }).catch(ex => {
+        dispatch('error', ex);
+      });
     } else {
-      meetups.addMeetup(meetupData);
+      meetupServer.addMeetup({
+        ...meetupData,
+        isFavorite: false,
+        imageUrl: `https://picsum.photos/200/300?random=${Math.random().toString()}`
+        }).then(data => {
+        meetups.addMeetup({...meetupData,
+          id: data.name,
+          isFavorite: false,
+          imageUrl: `https://picsum.photos/200/300?random=${Math.random().toString()}`
+        });
+      }).catch(ex => {
+        dispatch('error', ex);
+      });
     }
     
     dispatch("save");
